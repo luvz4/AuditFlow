@@ -1,15 +1,8 @@
-import React from "react";
-import Dashboard from "./components/Dashboard";
-import Alerts from "./components/Alerts";
-import Transactions from "./components/Transactions";
+import React, { useMemo, useEffect, useState } from 'react';
+import { supabase } from './supabaseClient';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import Dashboard from './components/Dashboard';
 
 export default function App() {
-  return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1>AuditFlow</h1>
-      <Dashboard />
-      <Alerts />
-      <Transactions />
-    </div>
-  );
+  // Your existing code here...
 }
