@@ -1,0 +1,98 @@
+import React, { useMemo } from 'react';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+
+export default function App() {
+  const COLORS = ['#4F46E5', '#06B6D4', '#F59E0B', '#EF4444'];
+
+  const transactions = useMemo(() => ([
+    { id: 1, date: '2025-07-29', description: 'Office supplies (Card x1234)', amount: -120.5, currency: 'USD', category: 'Supplies' },
+    { id: 2, date: '2025-07-20', description: 'Client payment (Invoice #232)', amount: 2400, currency: 'USD', category: 'Income' },
+    { id: 3, date: '2025-06-05', description: 'Monthly salary (Bank Transfer)', amount: -3200, currency: 'EUR', category: 'Salaries' },
+  ]), []);
+
+  const categories = useMemo(() => ([
+    { name: 'Supplies', value: 3200 },
+    { name: 'Salaries', value: 5400 },
+    { name: 'Subscriptions', value: 1200 },
+    { name: 'Travel', value: 800 },
+  ]), []);
+
+  const timeSeries = useMemo(() => ([
+    { date: '2025-01-01', out: 1200, in: 2000 },
+    { date: '2025-02-01', out: 800, in: 1800 },
+    { date: '2025-03-01', out: 1400, in: 2100 },
+  ]), []);
+
+  const alerts = useMemo(() => ([
+    { id: 1, message: 'Bank loan payment of $500 due on 2025-08-15' },
+    { id: 2, message: 'Subscription renewal of $200 due on 2025-08-20' },
+  ]), []);
+
+  return (
+    <div style={{ fontFamily: 'sans-serif', background: '#f9fafb', minHeight: '100vh', padding: '1.5rem' }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>AuditFlow</h1>
+      </header>
+
+      <main style={{ marginTop: '1.5rem', display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem' }}>
+        <section style={{ background: 'white', borderRadius: '1rem', padding: '1.5rem', boxShadow: '0 2px 6px rgba(0,0,0,0.05)' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>Cash Flow</h2>
+          <div style={{ height: '18rem', marginTop: '1rem' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={timeSeries}>
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey="in" stroke="#06B6D4" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="out" stroke="#EF4444" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1.5rem' }}>
+            <div style={{ padding: '1rem', border: '1px solid #e5e7eb', borderRadius: '0.5rem' }}>
+              <h3 style={{ fontWeight: '500' }}>Top spending categories</h3>
+              <div style={{ height: '11rem', marginTop: '0.5rem' }}>
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Pie data={categories} dataKey="value" nameKey="name" innerRadius={40} outerRadius={70}>
+                      {categories.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div style={{ padding: '1rem', border: '1px solid #e5e7eb', borderRadius: '0.5rem' }}>
+              <h3 style={{ fontWeight: '500' }}>Upcoming Payments</h3>
+              <ul style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
+                {alerts.map((alert) => (
+                  <li key={alert.id} style={{ marginBottom: '0.5rem' }}>• {alert.message}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <aside style={{ background: 'white', borderRadius: '1rem', padding: '1.5rem', boxShadow: '0 2px 6px rgba(0,0,0,0.05)' }}>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: '600' }}>Recent Transactions</h3>
+          <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {transactions.map((t) => (
+              <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem', borderRadius: '0.25rem', background: '#f9fafb' }}>
+                <div>
+                  <div style={{ fontSize: '0.875rem', fontWeight: '500' }}>{t.description}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>{t.date} • {t.category}</div>
+                </div>
+                <div style={{ fontSize: '0.875rem', fontWeight: '600', color: t.amount < 0 ? '#ef4444' : '#16a34a' }}>
+                  {t.amount < 0 ? '-' : '+'}{Math.abs(t.amount)} {t.currency}
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
+      </main>
+    </div>
+  );
+}
