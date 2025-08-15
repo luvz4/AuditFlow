@@ -1,35 +1,15 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Line } from "react-chartjs-2";
-import { Chart as ChartJS } from "chart.js/auto";
+import React from "react";
+import Dashboard from "./components/Dashboard";
+import Alerts from "./components/Alerts";
+import Transactions from "./components/Transactions";
 
-function App() {
-  const [payments, setPayments] = useState([]);
-
-  useEffect(() => {
-    axios.get("https://YOUR_BACKEND_URL/payments")
-      .then(res => setPayments(res.data))
-      .catch(err => console.error(err));
-  }, []);
-
-  const data = {
-    labels: payments.map(p => p.date),
-    datasets: [
-      {
-        label: "Payments",
-        data: payments.map(p => p.amount),
-        borderColor: "blue",
-        fill: false
-      }
-    ]
-  };
-
+export default function App() {
   return (
-    <div>
-      <h1>AuditFlow Dashboard</h1>
-      <Line data={data} />
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      <h1>AuditFlow</h1>
+      <Dashboard />
+      <Alerts />
+      <Transactions />
     </div>
   );
 }
-
-export default App;
